@@ -22,7 +22,7 @@ class PortfoliosController < ApplicationController
   end
 
   def show
-    @portfolio_item = Portfolio.find(params[:id])
+    @portfolio_item = Portfolio.find_by_id(params[:id])
   end
 
   def edit
@@ -35,13 +35,22 @@ class PortfoliosController < ApplicationController
     respond_to do |format|
       if @portfolio_item.update(portfolio_params)
         format.html { redirect_to portfolios_path, notice: 'Portfolio Item was successfully updated.' }
-        format.json { render :show, status: :ok, location: @portfolio_item }
       else
         format.html { render :edit }
-        format.json { render json: @portfolio_item.errors, status: :unprocessable_entity }
       end
     end
   end
+
+  def destroy
+    @portfolio_item = Portfolio.find(params[:id])
+    if @portfolio_item.present?
+      @portfolio_item.destroy
+    end      
+    respond_to do |format|
+      format.html {redirect_to portfolio_path, notice: 'Portfolio Item was Removed.'}
+    end
+  end
+
 
 private
 
